@@ -1,4 +1,23 @@
 package com.voxelseries.currency.api.manager.entity;
 
-public interface CurrencyEntity {
+import com.voxelseries.currency.api.kind.Currency;
+import net.endergrid.oxygen.api.collection.EntityMap;
+import net.endergrid.oxygen.api.entity.OxygenEntity;
+import net.endergrid.oxygen.api.entity.annotation.field.EntityField;
+
+import javax.annotation.Nonnull;
+import java.util.UUID;
+
+public interface CurrencyEntity extends OxygenEntity {
+    @EntityField("id")
+    UUID id();
+
+    @EntityField("currency")
+    EntityMap<Currency, CurrencyValueEntity, CurrencyValueEntityTemplate> currency();
+
+    default CurrencyValueEntity kind(@Nonnull Currency kind) {
+        return this.currency().computeEntityIfAbsent(kind, () -> CurrencyValueEntityTemplate.builder()
+                .withValue(kind.getDefaultBalance(this.id()))
+                .build());
+    }
 }
