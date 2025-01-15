@@ -1,3 +1,4 @@
 dependencies {
     compileOnlyApi(projects.core)
+    annotationProcessor(fileTree(rootDir.toPath().resolve("processor")))
 }
